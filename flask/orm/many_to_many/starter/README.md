@@ -31,7 +31,7 @@
   - DELETE /students/<int:id>
   - GET /students/<int:id>/courses
   - POST /students/<int:id>/enrollments
-    POST /students
+  - POST /students
 
 # Response Formats
 

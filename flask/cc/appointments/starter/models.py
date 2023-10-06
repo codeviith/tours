@@ -15,13 +15,18 @@ db = SQLAlchemy(metadata=metadata)
 class Patient(db.Model, SerializerMixin):
     __tablename__ = 'patient_table'
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Stirng, nullable=False)
     
 class Appointment(db.Model, SerializerMixin):
     __tablename__ = 'appointment_table'
     id = db.Column(db.Integer, primary_key=True)
-    
-
+    date = db.Column(db.Datetime, nullable=False)
+    doctor_id = db.Column(db.Integer, nullable=False)
+    patient_id = db.Column(db.Integer, nullable=False)
 
 class Doctor(db.Model, SerializerMixin):
     __tablename__ = 'doctor_table'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Stirng, nullable=False)
+    specialty = db.Column(db.String, nullable=False)
 

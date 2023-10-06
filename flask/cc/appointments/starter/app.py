@@ -22,7 +22,8 @@ def index():
 
 @app.get('/doctors')
 def get_doctors():
-    return {}
+    
+    return 
 
 @app.get('/doctors/<int:id>')
 def get_doctor_by_id(id):

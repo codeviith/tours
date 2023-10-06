@@ -15,7 +15,18 @@ def root():
 
 @app.get("/users")
 def get_users():
-    return {}
+    users = User.query.all()
+    # user_json_list = []
+
+    # i = 0
+    # while i < len(users):
+    #     user_json_list.append(users[i].to_dict())
+
+    # for user in users:
+    #     user_json_list.append(user.to_dict())
+
+    user_json_list = [user.to_dict() for user in users]    
+    return make_response(jsonify(user_json_list), 200)
 
 
 @app.post("/users")
@@ -25,17 +36,31 @@ def post_user():
 
 @app.get("/users/<int:id>")
 def get_user_by_id(id: int):
-    return {}
+    user = User.query.filter(User.id == id).first()
+    if user is None:
+        return make_response(jsonify({"error":f"no user with id {id}"}, 404))
+    else:
+        return make_response(jsonify(user.to_dict(), 200))
 
 
 @app.get("/users/<int:id>/blogs")
 def get_blogs_for_user(id: int):
-    return {}
+    # Blog.query.filter(Blog.user_id == id).all()
+
+    user = User.query.filter(User.id == id).first()
+    blogs = user.blog_list
+    blogs_json = [blog.to_dict() for blog in blogs]
+    return make_response(jsonify(blogs_json), 200)
 
 
 @app.post("/users/<int:id>/blogs")
 def post_blog_for_user(id: int):
-    return {}
+    request_data = request.json
+    new_user = User(name=request_data['name'])
+    db.session.add(new_user)
+    db.session.commit()
+    
+    return make_response(jsonify(new_user.to_dict(), 201))
 
 
 @app.get("/blogs/<int:id>")
@@ -50,7 +75,17 @@ def patch_blog(id: int):
 
 @app.patch("/users/<int:id>")
 def patch_user(id: int):
-    return {}
+    data = request.json
+    user = User.query.filter(User.id == id).first()
+    # {"name": "something"}
+    for key in data:
+        # key => "name"
+        # data[key] => "something"
+        # user.name => "something"
+        setattr(user, key, data[key])
+    db.session.add(user)
+    db.session.commit()
+    return make_response(jsonify(user.to_dict(), 201))
 
 
 @app.delete("/blogs/<int:id>")
@@ -60,6 +95,9 @@ def delete_blog(id: int):
 
 @app.delete("/users/<int:id>")
 def delete_user(id: int):
+    user = User.query.filter(User.id == id).first()
+    # check that user was found)
+
     return {}
 
 

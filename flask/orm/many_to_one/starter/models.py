@@ -15,21 +15,38 @@ metadata = MetaData(naming_convention=convention)
 
 db = SQLAlchemy(metadata=metadata)
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = "user_table"
+
+    # serialize_rules = ("-relationship_object.other_relationship_object",) 
+    # ### must be a TUPLE
+    serialize_rules = ("-blog_list.user_object",)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    blog_list = db.relationship("Blog", back_populates="user_object")
+    
+    # def to_dict(self):
+    #     return {"id":self.id, "name":self.name}
 
 
 
 
-class Blog(db.Model):
+class Blog(db.Model, SerializerMixin):
     __tablename__ = "blog_table"
 
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    content = db.Column(db.String)
 
+    user_id = db.Column(db.Integer, db.ForeignKey("user_table.id"))
+
+    # relationship("ClassName", back_populates="attribute_")
+    user_object = db.relationship("User", back_populates="blog_list")
+    
+    # def to_dict(self):
+    #     return {"id":self.id, "title":self.title, "content":self.content, "user_id":self.user_id}
 
 
 
