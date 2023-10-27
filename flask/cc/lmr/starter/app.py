@@ -64,9 +64,9 @@ def patch_middles_by_id(id):
     try:
         for key in data:
             setattr(middle_to_patch, key, data[key])
-            db.session.add(middle_to_patch)
-            db.session.commit()
-            return make_response(jsonify(middle_to_patch.to_dict(rules=("-left", "-right"))), 201)
+        db.session.add(middle_to_patch)
+        db.session.commit()
+        return make_response(jsonify(middle_to_patch.to_dict(rules=("-left", "-right"))), 201)
     except Exception as e:
         print(e)
         return make_response(set({"Error": "Cannot patch Middle."}), 405)
